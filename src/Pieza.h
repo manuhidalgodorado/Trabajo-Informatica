@@ -2,6 +2,7 @@
 
 #include <string>
 
+using namespace std;
 enum Color { BLANCO, NEGRO };
 
 class Pieza {
@@ -14,7 +15,7 @@ public:
     virtual ~Pieza() = default;
 
     virtual bool esMovimientoValido(int nuevoX, int nuevoY) = 0;
-    virtual std::string obtenerNombre() const = 0;
+    virtual string obtenerNombre() const = 0;
 
     int getX() const;
     int getY() const;
