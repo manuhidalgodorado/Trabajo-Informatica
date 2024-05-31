@@ -2,6 +2,7 @@
 #include <cmath>
 #include <vector>
 
+using namespace std;
 Peon::Peon(int _x, int _y, Color _color, bool _esModoDemi) : Pieza(_x, _y, _color), esModoDemi(_esModoDemi) {}
 
 bool Peon::esMovimientoValido(int nuevoX, int nuevoY) {
@@ -25,11 +26,11 @@ bool Peon::esMovimientoValido(int nuevoX, int nuevoY) {
     return false;
 }
 
-std::string Peon::obtenerNombre() const {
+string Peon::obtenerNombre() const {
     return "Peon";
 }
 
-bool Peon::esCapturaAlPaso(int nuevoX, int nuevoY, const std::vector<std::vector<Pieza*>>& casillas) const {
+bool Peon::esCapturaAlPaso(int nuevoX, int nuevoY, const vector<vector<Pieza*>>& casillas) const {
     if (!esModoDemi) return false;  // Captura al paso solo en modo Demi
     int dir = (color == BLANCO) ? 1 : -1;
     if (nuevoX == x + dir && std::abs(nuevoY - y) == 1) {
