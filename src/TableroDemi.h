@@ -4,6 +4,6 @@
 
 class TableroDemi : public Tablero{
 public:
-TableroDemi(bool Demi);
+TableroDemi(bool es_Demi);
 virtual ~TableroDemi();
 }
