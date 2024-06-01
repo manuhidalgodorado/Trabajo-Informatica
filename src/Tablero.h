@@ -3,14 +3,17 @@
 #include <vector>
 #include "Pieza.h"
 
+using namespace std;
+
 class Tablero {
 protected:
-    std::vector<std::vector<Pieza*>> casillas;
+    vector<vector<Pieza*>> casillas;
     Color turno;
     int seleccionadoX, seleccionadoY;
+    bool Demi;
 
 public:
-    Tablero();
+    Tablero(bool Demi);
     virtual ~Tablero();
 
     int getSeleccionadoX() const;
