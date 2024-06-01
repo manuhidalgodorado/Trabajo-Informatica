@@ -10,7 +10,9 @@
 #include <string>
 #include <vector>
 
-Tablero::Tablero() : turno(BLANCO), seleccionadoX(-1), seleccionadoY(-1) {}
+using namespace std;
+
+Tablero::Tablero(bool Demi) : turno(BLANCO), seleccionadoX(-1), seleccionadoY(-1) {}
 Tablero::~Tablero() {
     for (auto& fila : casillas) {
         for (auto& pieza : fila) {
