@@ -13,7 +13,7 @@ protected:
     bool Demi;
 
 public:
-    Tablero(bool Demi);
+    Tablero(bool es_Demi);
     virtual ~Tablero();
 
     int getSeleccionadoX() const;
