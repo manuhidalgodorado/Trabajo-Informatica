@@ -141,8 +141,8 @@ bool Tablero::moverPieza(int xInicial, int yInicial, int xFinal, int yFinal) {
 
     // Verificar si un rey está siendo capturado
     if (Rey* reyCapturado = dynamic_cast<Rey*>(casillas[xFinal][yFinal])) {
-        std::string ganador = (reyCapturado->getColor() == BLANCO) ? "Negras" : "Blancas";
-        std::string mensaje = "¡Jaque Mate! Ganador: " + ganador;
+        string ganador = (reyCapturado->getColor() == BLANCO) ? "Negras" : "Blancas";
+        string mensaje = "¡Jaque Mate! Ganador: " + ganador;
         MessageBoxA(nullptr, mensaje.c_str(), "Fin del juego", MB_OK);
         exit(0);
     }
@@ -155,12 +155,7 @@ bool Tablero::moverPieza(int xInicial, int yInicial, int xFinal, int yFinal) {
                 return false;  // Casilla no está vacía
             }
         }
-        else if (esModoDemi && peon->esPrimerMovimiento() && xFinal == xInicial + 2 * ((peon->getColor() == BLANCO) ? 1 : -1) && yFinal == yInicial) {
-            if (casillas[xFinal][yFinal] != nullptr || casillas[xInicial + ((peon->getColor() == BLANCO) ? 1 : -1)][yFinal] != nullptr) {
-                return false;  // Casilla no está vacía
-            }
-        }
-        else if (std::abs(xFinal - xInicial) == 1 && std::abs(yFinal - yInicial) == 1) {
+        else if (abs(xFinal - xInicial) == 1 && abs(yFinal - yInicial) == 1) {
             // Captura en diagonal
             if (casillas[xFinal][yFinal] == nullptr || casillas[xFinal][yFinal]->getColor() == turno) {
                 return false;
