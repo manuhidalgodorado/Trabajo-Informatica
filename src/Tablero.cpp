@@ -119,6 +119,15 @@ bool Tablero::esTurnoValido(int x, int y) {
     return pieza != nullptr && pieza->getColor() == turno;
 }
 
+bool Tablero::esCapturaAlPaso(int xInicial, int yInicial, int xFinal, int yFinal) const {
+    Pieza* pieza = casillas[xInicial][yInicial];
+    if (Peon* peon = dynamic_cast<Peon*>(pieza)) {
+        return peon->esCapturaAlPaso(xFinal, yFinal, casillas);
+    }
+    return false;
+}
+
+
 void Tablero::cambiarTurno() {
     turno = (turno == BLANCO) ? NEGRO : BLANCO;
 }
@@ -148,23 +157,36 @@ bool Tablero::moverPieza(int xInicial, int yInicial, int xFinal, int yFinal) {
     }
 
     // Validar movimiento del peón
-    if (Peon* peon = dynamic_cast<Peon*>(pieza)) {
-        // Movimiento hacia adelante
-        if (xFinal == xInicial + ((peon->getColor() == BLANCO) ? 1 : -1) && yFinal == yInicial) {
-            if (casillas[xFinal][yFinal] != nullptr) {
-                return false;  // Casilla no está vacía
-            }
-        }
-        else if (abs(xFinal - xInicial) == 1 && abs(yFinal - yInicial) == 1) {
-            // Captura en diagonal
-            if (casillas[xFinal][yFinal] == nullptr || casillas[xFinal][yFinal]->getColor() == turno) {
-                return false;
-            }
-        }
-        else {
-            return false;  // Movimiento no válido para el peón
+if (Peon* peon = dynamic_cast<Peon*>(pieza)) {
+    // Movimiento hacia adelante
+    if (xFinal == xInicial + ((peon->getColor() == BLANCO) ? 1 : -1) && yFinal == yInicial) {
+        if (casillas[xFinal][yFinal] != nullptr) {
+            return false;  // Casilla no está vacía
         }
     }
+    else if (esModoDemi && peon->esPrimerMovimiento() && xFinal == xInicial + 2 * ((peon->getColor() == BLANCO) ? 1 : -1) && yFinal == yInicial) {
+        if (casillas[xFinal][yFinal] != nullptr || casillas[xInicial + ((peon->getColor() == BLANCO) ? 1 : -1)][yFinal] != nullptr) {
+            return false;  // Casilla no está vacía
+        }
+    }
+    else if (std::abs(xFinal - xInicial) == 1 && std::abs(yFinal - yInicial) == 1) {
+        // Captura en diagonal
+        if (casillas[xFinal][yFinal] == nullptr || casillas[xFinal][yFinal]->getColor() == turno) {
+            // Verificar captura al paso
+            if (!esCapturaAlPaso(xInicial, yInicial, xFinal, yFinal)) {
+                return false;  // No hay pieza para capturar o es una pieza del mismo color
+            }
+            else {
+                // Captura al paso
+                delete casillas[xInicial][yFinal]; // Eliminar la pieza capturada al paso
+                casillas[xInicial][yFinal] = nullptr;
+            }
+        }
+    }
+    else {
+        return false;  // Movimiento no válido para el peón
+    }
+}
 
     // Mueve la pieza a la nueva posición y captura cualquier pieza en la posición final
     delete casillas[xFinal][yFinal];  // Elimina la pieza capturada
