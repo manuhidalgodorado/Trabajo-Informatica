@@ -69,8 +69,64 @@ void inicializarJuego() {
         glutDestroyWindow(mainWindow);
         glutSetWindow(newWindow);
     }
-
     
+    if (tablero) {
+        glutDisplayFunc(display);
+        glutMouseFunc(onMouseClick);
+        glClearColor(1.0, 1.0, 1.0, 1.0);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        gluOrtho2D(0.0, 480.0, 0.0, tipoJuego == 1 ? 600.0 : 960.0);
+        glutPostRedisplay();
+    }
+    
+}
+void onMouseClick(int button, int state, int x, int y) {
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        if (menuActivo) {
+            // Convertir coordenadas de pantalla a coordenadas de OpenGL
+            int glY = 600 - y;
+
+            // Verificar si se hizo clic en el botón Silverman 4x5
+            if (x >= 150 && x <= 330 && glY >= 300 && glY <= 350) {
+                tipoJuego = 1;
+                menuActivo = false;
+                inicializarJuego();
+            }
+            // Verificar si se hizo clic en el botón Demi 4x8
+            else if (x >= 150 && x <= 330 && glY >= 200 && glY <= 250) {
+                tipoJuego = 2;
+                menuActivo = false;
+                inicializarJuego();
+            }
+        }
+        else if (tablero) {
+            int tableroX = x / 120;
+            int tableroY = ((tipoJuego == 1 ? 610 : 865) - y) / 110;
+
+            if (tableroX < 0 || tableroX >= 4 || tableroY < 0 || (tipoJuego == 1 ? tableroY >= 5 : tableroY >= 8)) return;
+
+            if (tablero->getSeleccionadoX() == -1 && tablero->getSeleccionadoY() == -1) {
+                if (tablero->esTurnoValido(tableroY, tableroX)) {
+                    tablero->seleccionarPieza(tableroY, tableroX);
+                }
+            }
+            else {
+                int seleccionadoX = tablero->getSeleccionadoX();
+                int seleccionadoY = tablero->getSeleccionadoY();
+                if (tablero->moverPieza(seleccionadoX, seleccionadoY, tableroY, tableroX)) {
+                    tablero->setSeleccionadoX(-1);
+                    tablero->setSeleccionadoY(-1);
+                }
+                else {
+                    tablero->setSeleccionadoX(-1);
+                    tablero->setSeleccionadoY(-1);
+                }
+            }
+
+            glutPostRedisplay();
+        }
+    }
 }
 
 
