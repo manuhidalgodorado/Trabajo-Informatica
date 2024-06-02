@@ -16,6 +16,8 @@ public:
     Tablero(bool _esModoDemi);
     virtual ~Tablero();
 
+     void dibujar();
+
     int getSeleccionadoX() const;
     int getSeleccionadoY() const;
     void setSeleccionadoX(int x);
