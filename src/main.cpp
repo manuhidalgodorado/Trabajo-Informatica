@@ -5,6 +5,7 @@
 #include "Windows.h"
 
 void display();
+void inicializarJuego();
 void displayText(float x, float y, const char* text);
 
 void displayText(float x, float y, const char* text) {
@@ -47,6 +48,25 @@ void display() {
     }
     
     glutSwapBuffers();
+}
+
+void inicializarJuego() {
+    if (tipoJuego == 1) {
+        glutInitWindowSize(480, 600);
+        int newWindow = glutCreateWindow("Silverman 4x5");
+        tablero = new TableroSilverman(false);  // Modo no Demi
+        glutDestroyWindow(mainWindow);
+        glutSetWindow(newWindow);
+    }
+    else if (tipoJuego == 2) {
+        glutInitWindowSize(480, 960);
+        int newWindow = glutCreateWindow("Demi");
+        tablero = new TableroDemi(true);  // Modo Demi
+        glutDestroyWindow(mainWindow);
+        glutSetWindow(newWindow);
+    }
+
+    
 }
 
 
