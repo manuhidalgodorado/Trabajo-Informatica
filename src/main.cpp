@@ -7,6 +7,10 @@
 void display();
 void inicializarJuego();
 void displayText(float x, float y, const char* text);
+void onMouseClick(int button, int state, int x, int y);
+
+
+
 
 void displayText(float x, float y, const char* text) {
     glRasterPos2f(x, y);
