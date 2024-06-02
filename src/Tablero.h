@@ -10,10 +10,10 @@ protected:
     vector<vector<Pieza*>> casillas;
     Color turno;
     int seleccionadoX, seleccionadoY;
-    bool Demi;
+    bool esModoDemi;
 
 public:
-    Tablero(bool es_Demi);
+    Tablero(bool _esModoDemi);
     virtual ~Tablero();
 
     int getSeleccionadoX() const;
