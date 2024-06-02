@@ -9,7 +9,7 @@
 
 using namespace std;
 
-TableroDemi::TableroDemi(bool es_Demi) : Tablero(es_Demi) {
+TableroDemi::TableroDemi(bool esModoDemi) : Tablero(esModoDemi) {
     casillas.resize(8, std::vector<Pieza*>(4, nullptr));
 
     // Construcción de las piezas blancas en su posición correcta
@@ -19,7 +19,7 @@ TableroDemi::TableroDemi(bool es_Demi) : Tablero(es_Demi) {
     casillas[0][3] = new Torre(0, 3, BLANCO);
   // Construcción de la pieza peón blanco con un bucle for
     for (int i = 0; i < 4; i++) {
-        casillas[1][i] = new Peon(1, i, BLANCO, es_Demi);  
+        casillas[1][i] = new Peon(1, i, BLANCO, esModoDemi);  
     }
 
     // Construcción de las piezas negras en su posición correcta
@@ -29,7 +29,7 @@ TableroDemi::TableroDemi(bool es_Demi) : Tablero(es_Demi) {
     casillas[7][3] = new Torre(7, 3, NEGRO);
   // Construcción de la pieza peón negro con un bucle for
     for (int i = 0; i < 4; i++) {
-        casillas[6][i] = new Peon(6, i, NEGRO, es_Demi);  
+        casillas[6][i] = new Peon(6, i, NEGRO, esModoDemi);  
     }
 }
 
