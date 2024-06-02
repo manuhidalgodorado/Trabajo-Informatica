@@ -81,6 +81,9 @@ void Tablero::dibujar() {
         }
     }
 }
+void Tablero::cambiarTurno() {
+    turno = (turno == BLANCO) ? NEGRO : BLANCO;
+}
 
 
 int Tablero::getSeleccionadoX() const {
