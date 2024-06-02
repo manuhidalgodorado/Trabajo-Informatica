@@ -17,6 +17,11 @@ public:
     virtual ~Tablero();
 
      void dibujar();
+    Pieza* obtenerpieza(int x, int y);
+    void seleccionarPieza(int x, int y);
+    bool caminoDespejado(int xInicial, int yInicial, int xFinal, int yFinal);
+    bool esTurnoValido(int x, int y);
+    bool caminoDespejado(int xInicial, int yInicial, int xFinal, int yFinal);
     void cambiarTurno();
     bool moverPieza(int xInicial, int yInicial, int xFinal, int yFinal);
     int getSeleccionadoX() const;
