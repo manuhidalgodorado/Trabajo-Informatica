@@ -24,6 +24,7 @@ public:
     bool caminoDespejado(int xInicial, int yInicial, int xFinal, int yFinal);
     void cambiarTurno();
     bool moverPieza(int xInicial, int yInicial, int xFinal, int yFinal);
+    bool esCapturaAlPaso(int xInicial, int yInicial, int xFinal, int yFinal) const;
     int getSeleccionadoX() const;
     int getSeleccionadoY() const;
     void setSeleccionadoX(int x);
