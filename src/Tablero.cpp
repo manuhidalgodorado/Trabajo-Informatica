@@ -12,7 +12,7 @@
 
 using namespace std;
 
-Tablero::Tablero(bool Demi) : turno(BLANCO), seleccionadoX(-1), seleccionadoY(-1) Demi(es_Demi) {}
+Tablero::Tablero(bool esModoDemi) : turno(BLANCO), seleccionadoX(-1), seleccionadoY(-1) esModoDemi(_esModoDemi) {}
 Tablero::~Tablero() {
     for (auto& fila : casillas) {
         for (auto& pieza : fila) {
