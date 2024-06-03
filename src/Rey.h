@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Pieza.h"
+
 using namespace std;
 
 class Rey : public Pieza {
@@ -9,4 +10,3 @@ public:
     virtual bool esMovimientoValido(int nuevoX, int nuevoY) override;
     virtual string obtenerNombre() const override;
 };
-

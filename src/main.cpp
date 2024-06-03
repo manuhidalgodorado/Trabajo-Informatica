@@ -1,16 +1,17 @@
 #include <iostream>
-#include <freeglut.h>
+#include "freeglut.h"
 #include "TableroSilverman.h"
 #include "TableroDemi.h"
-#include "Windows.h"
 
 void display();
 void inicializarJuego();
 void displayText(float x, float y, const char* text);
 void onMouseClick(int button, int state, int x, int y);
 
-
-
+int tipoJuego = 0;
+bool menuActivo = true;
+Tablero* tablero = nullptr;
+int mainWindow;
 
 void displayText(float x, float y, const char* text) {
     glRasterPos2f(x, y);

@@ -2,8 +2,8 @@
 
 #include "Tablero.h"
 
-class TableroDemi : public Tablero{
+class TableroDemi : public Tablero {
 public:
-TableroDemi(bool esModoDemi);
-virtual ~TableroDemi();
-}
+	TableroDemi(bool esModoDemi);
+	virtual ~TableroDemi();
+};

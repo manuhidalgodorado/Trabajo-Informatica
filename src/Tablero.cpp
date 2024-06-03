@@ -6,14 +6,13 @@
 #include "Caballo.h"
 #include "Alfil.h"
 #include <iostream>
-#include <freeglut.h>
+#include "freeglut.h"
+#include <Windows.h>
 #include <string>
 #include <vector>
-#include <windows.h>
-
 using namespace std;
 
-Tablero::Tablero(bool _esModoDemi) : turno(BLANCO), seleccionadoX(-1), seleccionadoY(-1) esModoDemi(_esModoDemi) {}
+Tablero::Tablero(bool _esModoDemi) : turno(BLANCO), seleccionadoX(-1), seleccionadoY(-1), esModoDemi(_esModoDemi) {}
 Tablero::~Tablero() {
     for (auto& fila : casillas) {
         for (auto& pieza : fila) {
@@ -82,6 +81,7 @@ void Tablero::dibujar() {
         }
     }
 }
+
 Pieza* Tablero::obtenerPieza(int x, int y) {
     return casillas[x][y];
 }
@@ -131,8 +131,8 @@ bool Tablero::esCapturaAlPaso(int xInicial, int yInicial, int xFinal, int yFinal
 void Tablero::cambiarTurno() {
     turno = (turno == BLANCO) ? NEGRO : BLANCO;
 }
-
-bool Tablero::moverPieza(int xInicial, int yInicial, int xFinal, int yFinal) {
+bool Tablero::compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal)
+{
     Pieza* pieza = casillas[xInicial][yInicial];
     if (pieza == nullptr || pieza->getColor() != turno || !pieza->esMovimientoValido(xFinal, yFinal)) {
         return false;
@@ -149,52 +149,64 @@ bool Tablero::moverPieza(int xInicial, int yInicial, int xFinal, int yFinal) {
     }
 
     // Verificar si un rey está siendo capturado
-    if (Rey* reyCapturado = dynamic_cast<Rey*>(casillas[xFinal][yFinal])) {
-        string ganador = (reyCapturado->getColor() == BLANCO) ? "Negras" : "Blancas";
-        string mensaje = "¡Jaque Mate! Ganador: " + ganador;
-        MessageBoxA(nullptr, mensaje.c_str(), "Fin del juego", MB_OK);
-        exit(0);
-    }
-
     // Validar movimiento del peón
-if (Peon* peon = dynamic_cast<Peon*>(pieza)) {
-    // Movimiento hacia adelante
-    if (xFinal == xInicial + ((peon->getColor() == BLANCO) ? 1 : -1) && yFinal == yInicial) {
-        if (casillas[xFinal][yFinal] != nullptr) {
-            return false;  // Casilla no está vacía
-        }
-    }
-    else if (esModoDemi && peon->esPrimerMovimiento() && xFinal == xInicial + 2 * ((peon->getColor() == BLANCO) ? 1 : -1) && yFinal == yInicial) {
-        if (casillas[xFinal][yFinal] != nullptr || casillas[xInicial + ((peon->getColor() == BLANCO) ? 1 : -1)][yFinal] != nullptr) {
-            return false;  // Casilla no está vacía
-        }
-    }
-    else if (std::abs(xFinal - xInicial) == 1 && std::abs(yFinal - yInicial) == 1) {
-        // Captura en diagonal
-        if (casillas[xFinal][yFinal] == nullptr || casillas[xFinal][yFinal]->getColor() == turno) {
-            // Verificar captura al paso
-            if (!esCapturaAlPaso(xInicial, yInicial, xFinal, yFinal)) {
-                return false;  // No hay pieza para capturar o es una pieza del mismo color
-            }
-            else {
-                // Captura al paso
-                delete casillas[xInicial][yFinal]; // Eliminar la pieza capturada al paso
-                casillas[xInicial][yFinal] = nullptr;
+    if (Peon* peon = dynamic_cast<Peon*>(pieza)) {
+        // Movimiento hacia adelante
+        if (xFinal == xInicial + ((peon->getColor() == BLANCO) ? 1 : -1) && yFinal == yInicial) {
+            if (casillas[xFinal][yFinal] != nullptr) {
+                return false;  // Casilla no está vacía
             }
         }
-    }
-    else {
-        return false;  // Movimiento no válido para el peón
+        else if (esModoDemi && peon->esPrimerMovimiento() && xFinal == xInicial + 2 * ((peon->getColor() == BLANCO) ? 1 : -1) && yFinal == yInicial) {
+            if (casillas[xFinal][yFinal] != nullptr || casillas[xInicial + ((peon->getColor() == BLANCO) ? 1 : -1)][yFinal] != nullptr) {
+                return false;  // Casilla no está vacía
+            }
+        }
+        else if (std::abs(xFinal - xInicial) == 1 && std::abs(yFinal - yInicial) == 1) {
+            // Captura en diagonal
+            if (casillas[xFinal][yFinal] == nullptr || casillas[xFinal][yFinal]->getColor() == turno) {
+                // Verificar captura al paso
+                if (!esCapturaAlPaso(xInicial, yInicial, xFinal, yFinal)) {
+                    return false;  // No hay pieza para capturar o es una pieza del mismo color
+                }
+            }
+        }
+        else {
+            return false;  // Movimiento no válido para el peón
+        }
     }
 }
 
-    // Mueve la pieza a la nueva posición y captura cualquier pieza en la posición final
-    delete casillas[xFinal][yFinal];  // Elimina la pieza capturada
-    casillas[xFinal][yFinal] = pieza;
-    casillas[xInicial][yInicial] = nullptr;
-    pieza->setPosicion(xFinal, yFinal);
-    cambiarTurno();
-    return true;
+bool Tablero::moverPieza(int xInicial, int yInicial, int xFinal, int yFinal) {
+
+    Pieza* pieza = casillas[xInicial][yInicial];
+    if (compMovePieza(xInicial, yInicial, xFinal, yFinal))
+    {
+        delete casillas[xFinal][yFinal];  // Eliminar la pieza capturada
+        casillas[xFinal][yFinal] = pieza;
+        casillas[xInicial][yInicial] = nullptr;
+        pieza->setPosicion(xFinal, yFinal);
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+vector<std::pair<int, int>> Tablero::obtenerMovimientosPosibles(int x, int y) {
+    std::vector<std::pair<int, int>> movimientos;
+    Pieza* pieza = casillas[x][y];
+    if (!pieza) return movimientos;
+
+    for (int i = 0; i < casillas.size(); ++i) {
+        for (int j = 0; j < casillas[0].size(); ++j) {
+            if (compMovePieza(pieza->getX(), pieza->getY(), i, j))
+            {
+                movimientos.push_back({ i,j });
+            }
+        }
+    }
+    return movimientos;
 }
 
 int Tablero::getSeleccionadoX() const {

@@ -16,15 +16,18 @@ public:
     Tablero(bool _esModoDemi);
     virtual ~Tablero();
 
-     void dibujar();
-    Pieza* obtenerpieza(int x, int y);
+    void dibujar();
+    Pieza* obtenerPieza(int x, int y);
     void seleccionarPieza(int x, int y);
     bool caminoDespejado(int xInicial, int yInicial, int xFinal, int yFinal);
     bool esTurnoValido(int x, int y);
-    bool caminoDespejado(int xInicial, int yInicial, int xFinal, int yFinal);
     void cambiarTurno();
+    bool compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal);
     bool moverPieza(int xInicial, int yInicial, int xFinal, int yFinal);
     bool esCapturaAlPaso(int xInicial, int yInicial, int xFinal, int yFinal) const;
+    vector<std::pair<int, int>> obtenerMovimientosPosibles(int x, int y);
+
+
     int getSeleccionadoX() const;
     int getSeleccionadoY() const;
     void setSeleccionadoX(int x);
