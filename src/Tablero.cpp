@@ -94,6 +94,7 @@ void Tablero::seleccionarPieza(int x, int y) {
 }
 //Verifica si la casilla está despejada, para que no colisionen dos piezas del mismo color.
 bool Tablero::caminoDespejado(int xInicial, int yInicial, int xFinal, int yFinal) {
+
     int dx = xFinal - xInicial;
     int dy = yFinal - yInicial;
 
@@ -113,6 +114,7 @@ bool Tablero::caminoDespejado(int xInicial, int yInicial, int xFinal, int yFinal
 
     return true;
 }
+
 //Verifica si el turno es para las piezas negras o para las piezas blancas
 bool Tablero::esTurnoValido(int x, int y) {
     Pieza* pieza = obtenerPieza(x, y);
@@ -175,6 +177,7 @@ bool Tablero::compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal)
             return false;  // Movimiento no válido para el peón
         }
     }
+    return true;
 }
 
 bool Tablero::moverPieza(int xInicial, int yInicial, int xFinal, int yFinal) {

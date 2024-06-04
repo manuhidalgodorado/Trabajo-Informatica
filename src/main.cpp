@@ -51,7 +51,10 @@ void display() {
         glColor3f(0.0f, 0.0f, 0.0f);
         displayText(190, 220, "      Demi");
     }
-    
+    else if (tablero)
+    {
+        tablero->dibujar();
+    }
     glutSwapBuffers();
 }
 
@@ -117,6 +120,7 @@ void onMouseClick(int button, int state, int x, int y) {
                 int seleccionadoX = tablero->getSeleccionadoX();
                 int seleccionadoY = tablero->getSeleccionadoY();
                 if (tablero->moverPieza(seleccionadoX, seleccionadoY, tableroY, tableroX)) {
+                    tablero->cambiarTurno();
                     tablero->setSeleccionadoX(-1);
                     tablero->setSeleccionadoY(-1);
                 }
@@ -125,7 +129,6 @@ void onMouseClick(int button, int state, int x, int y) {
                     tablero->setSeleccionadoY(-1);
                 }
             }
-
             glutPostRedisplay();
         }
     }
