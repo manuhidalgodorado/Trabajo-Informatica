@@ -132,6 +132,7 @@ bool Tablero::esCapturaAlPaso(int xInicial, int yInicial, int xFinal, int yFinal
 
 void Tablero::cambiarTurno() {
     turno = (turno == BLANCO) ? NEGRO : BLANCO;
+    hayMate_Ahogado();
 }
 bool Tablero::compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal)
 {
@@ -269,7 +270,40 @@ bool Tablero::hayJaque()
     }
     return false;
 }
-
+bool Tablero::hayMate_Ahogado()
+{
+    std::vector < std::pair<int, int>> movpieza;
+    int nummov = 0;
+    Pieza* pieza;
+    for (int i = 0; i < casillas.size(); ++i) {
+        for (int j = 0; j < casillas[0].size(); ++j) {
+            pieza = casillas[i][j];
+            if (pieza != nullptr)
+            {
+                movpieza = obtenerMovimientosPosibles(pieza->getX(), pieza->getY());
+                nummov += movpieza.size();
+            }
+        }
+    }
+    if (nummov == 0)
+    {
+        if (hayJaque())
+        {
+            std::string ganador = (turno == BLANCO) ? "Negras" : "Blancas";
+            std::string mensaje = "Jaque Mate! Ganador: " + ganador;
+            MessageBoxA(nullptr, mensaje.c_str(), "Fin de Partida", MB_OK);
+            exit(0);
+        }
+        else
+        {
+            std::string ganador = (turno == NEGRO) ? "Negras" : "Blancas";
+            std::string mensaje = "Ahogado " + ganador + " ¡TABLAS!";
+            MessageBoxA(nullptr, mensaje.c_str(), "Fin de Partida", MB_OK);
+            std::cout << "Ahogado " << ganador << std::endl << "TABLAS";
+            exit(0);
+        }
+    }
+}
 int Tablero::getSeleccionadoX() const {
     return seleccionadoX;
 }
