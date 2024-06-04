@@ -211,6 +211,55 @@ vector<std::pair<int, int>> Tablero::obtenerMovimientosPosibles(int x, int y) {
     }
     return movimientos;
 }
+//Función para comprobar Jaque
+bool Tablero::hayJaque()
+{
+    Pieza* piezabus;
+    Pieza* turnoRey;
+    //Buscamos el rey
+    for (int i = 0; i < casillas.size(); ++i) {
+        for (int j = 0; j < casillas[0].size(); ++j) {
+            piezabus = casillas[i][j];
+            if (piezabus = dynamic_cast<Rey*>(casillas[i][j]))
+            {
+                if (piezabus->getColor() == turno)
+                {
+                    turnoRey = piezabus;
+                }
+            }
+
+        }
+    }
+    Pieza* piezacom;
+    //Comprobamos si el rey esta amenazado por alguna de las piezas.
+    for (int i = 0; i < casillas.size(); ++i) {
+        for (int j = 0; j < casillas[0].size(); ++j) {
+            piezacom = casillas[i][j];
+            if (piezacom != nullptr && piezacom->getColor() != turno)
+            {
+                if (piezacom->esMovimientoValido(turnoRey->getX(), turnoRey->getY()))
+                {
+                    //Comprobamos Alfil, torre y reina
+                    if (!dynamic_cast<Peon*>(piezacom) && !dynamic_cast<Caballo*>(piezacom) && caminoDespejado(piezacom->getX(), piezacom->getY(), turnoRey->getX(), turnoRey->getY()))
+                    {
+                        return true;
+                    }
+                    //Comprobamos posible captura de peon
+                    if (std::abs(turnoRey->getX() - piezacom->getX()) == 1 && std::abs(turnoRey->getY() - piezacom->getY()) == 1) {
+                        // Captura en diagonal
+                        return true;
+                    }
+                    //Comprobamos posible captura con caballo
+                    if (dynamic_cast<Caballo*>(piezacom))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
 
 int Tablero::getSeleccionadoX() const {
     return seleccionadoX;

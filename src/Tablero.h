@@ -26,6 +26,7 @@ public:
     bool moverPieza(int xInicial, int yInicial, int xFinal, int yFinal);
     bool esCapturaAlPaso(int xInicial, int yInicial, int xFinal, int yFinal) const;
     vector<std::pair<int, int>> obtenerMovimientosPosibles(int x, int y);
+    bool hayJaque();
 
 
     int getSeleccionadoX() const;
