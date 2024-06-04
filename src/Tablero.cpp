@@ -177,6 +177,15 @@ bool Tablero::compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal)
             return false;  // Movimiento no válido para el peón
         }
     }
+    Pieza* piezaprov = casillas[xFinal][yFinal];
+    casillas[xFinal][yFinal] = pieza;
+    casillas[xInicial][yInicial] = nullptr;
+    pieza->setPosicion(xFinal, yFinal);
+    bool hacke = hayJaque();
+    casillas[xInicial][yInicial] = pieza;
+    casillas[xFinal][yFinal] = piezaprov;
+    pieza->setPosicion(xInicial, yInicial);
+    if (hacke)return false;
     return true;
 }
 
