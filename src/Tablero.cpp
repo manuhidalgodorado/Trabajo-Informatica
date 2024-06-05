@@ -346,6 +346,24 @@ void Tablero::resetearPassant(Color turno) {
         }
     }
 }
+std::pair<int, int> Tablero::peonCorona()
+{
+    Pieza* posiblePeon;
+    Peon* confirmadoPeon;
+    int LineaFinal = (turno == BLANCO) ? (casillas.size() - 1) : 0;
+    bool coronado = false;
+    for (int j = 0; j < casillas[0].size(); ++j) {
+        posiblePeon = casillas[LineaFinal][j];
+        if (dynamic_cast<Peon*>(posiblePeon) && posiblePeon->getColor() == turno)
+        {
+            delete casillas[LineaFinal][j];
+            casillas[LineaFinal][j] = nullptr;
+            MessageBoxA(nullptr, "Peon Corona", "Corona", MB_OK);
+            return { LineaFinal, j };
+        }
+    }
+    return{ -1,-1 };
+}
 int Tablero::getSeleccionadoX() const {
     return seleccionadoX;
 }

@@ -12,6 +12,7 @@ int tipoJuego = 0;
 bool menuActivo = true;
 Tablero* tablero = nullptr;
 int mainWindow;
+std::pair<int, int> peonCorona;
 
 void displayText(float x, float y, const char* text) {
     glRasterPos2f(x, y);
@@ -120,6 +121,7 @@ void onMouseClick(int button, int state, int x, int y) {
                 int seleccionadoX = tablero->getSeleccionadoX();
                 int seleccionadoY = tablero->getSeleccionadoY();
                 if (tablero->moverPieza(seleccionadoX, seleccionadoY, tableroY, tableroX)) {
+                    peonCorona=tablero->peonCorona();
                     tablero->cambiarTurno();
                     tablero->setSeleccionadoX(-1);
                     tablero->setSeleccionadoY(-1);

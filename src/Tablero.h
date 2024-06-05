@@ -25,7 +25,8 @@ public:
     bool compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal);
     bool moverPieza(int xInicial, int yInicial, int xFinal, int yFinal);
     bool esCapturaAlPaso(int xInicial, int yInicial, int xFinal, int yFinal) const;
-    vector<std::pair<int, int>> obtenerMovimientosPosibles(int x, int y);
+    vector<pair<int, int>> obtenerMovimientosPosibles(int x, int y);
+    pair<int, int> peonCorona();
     bool hayJaque();
     bool hayMate_Ahogado();
     void resetearPassant(Color turno);
