@@ -13,6 +13,8 @@ bool menuActivo = true;
 Tablero* tablero = nullptr;
 int mainWindow;
 std::pair<int, int> peonCorona;
+char a;
+bool coronacion;
 
 void displayText(float x, float y, const char* text) {
     glRasterPos2f(x, y);
@@ -121,10 +123,47 @@ void onMouseClick(int button, int state, int x, int y) {
                 int seleccionadoX = tablero->getSeleccionadoX();
                 int seleccionadoY = tablero->getSeleccionadoY();
                 if (tablero->moverPieza(seleccionadoX, seleccionadoY, tableroY, tableroX)) {
-                    peonCorona=tablero->peonCorona();
-                    tablero->cambiarTurno();
-                    tablero->setSeleccionadoX(-1);
-                    tablero->setSeleccionadoY(-1);
+                    peonCorona = tablero->peonCorona(coronacion);
+                    if (coronacion)
+                    {
+                        if (tipoJuego == 2)
+                        {
+                            while (a != 'c' && a != 'a' && a != 't')
+                            {
+                                std::cout << (char)168 << "A que quieres promover?: ";
+                                std::cin >> a;
+                                if (a != 'c' && a != 'a' && a != 't')
+                                {
+                                    std::cout << std::endl << "Seleccione entre Torre: t, Alfil: a, Caballo: c" << std::endl;
+                                }
+                                else
+                                {
+                                    std::cout << std::endl << "Coronacion correcta, vuelva al juego" << std::endl;
+                                }
+                            }
+                        }
+                        if (tipoJuego == 1)
+                        {
+                            while (a != 't' && a != 'r')
+                            {
+                                std::cout << (char)168 << "A que quieres promover?: ";
+                                std::cin >> a;
+                                if (a != 't' && a != 'r')
+                                {
+                                    std::cout << std::endl << "Seleccione entre Torre: t, Reina: r" << std::endl;
+                                }
+                                else
+                                {
+                                    std::cout << std::endl << "Coronacion correcta, vuelva al juego" << std::endl;
+                                }
+                            }
+                        }
+                    }
+                    if (!coronacion) {
+                        tablero->cambiarTurno();
+                        tablero->setSeleccionadoX(-1);
+                        tablero->setSeleccionadoY(-1);
+                    }
                 }
                 else {
                     tablero->setSeleccionadoX(-1);
