@@ -166,7 +166,7 @@ bool Tablero::compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal)
             }
             peon->setEnPassant(true);
         }
-        else if (std::abs(xFinal - xInicial) == 1 && std::abs(yFinal - yInicial) == 1) {
+        else if (abs(xFinal - xInicial) == 1 && abs(yFinal - yInicial) == 1) {
             // Captura en diagonal
             if (casillas[xFinal][yFinal] == nullptr || casillas[xFinal][yFinal]->getColor() == turno) {
                 // Verificar captura al paso
@@ -179,7 +179,7 @@ bool Tablero::compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal)
             return false;  // Movimiento no válido para el peón
         }
     }
-    if (dynamic_cast<Peon*>(pieza) && std::abs(xFinal - xInicial) == 1 && std::abs(yFinal - yInicial) == 1 && esModoDemi && casillas[xFinal][yFinal] == nullptr)
+    if (dynamic_cast<Peon*>(pieza) && abs(xFinal - xInicial) == 1 && abs(yFinal - yInicial) == 1 && esModoDemi && casillas[xFinal][yFinal] == nullptr)
     {
         Pieza* piezaprov = casillas[xInicial][yFinal];
         casillas[xInicial][yFinal] = nullptr;
@@ -227,14 +227,16 @@ bool Tablero::moverPieza(int xInicial, int yInicial, int xFinal, int yFinal) {
             casillas[xInicial][yInicial] = nullptr;
             pieza->setPosicion(xFinal, yFinal);
         }
+        string jugador = (turno == BLANCO) ? "Blancas" : "Negras";
+        cout << jugador << ": " << pieza->obtenerNombre() << (char)(pieza->getY() + 97) << pieza->getX() << endl;
     }
     else
     {
         return false;
     }
 }
-vector<std::pair<int, int>> Tablero::obtenerMovimientosPosibles(int x, int y) {
-    std::vector<std::pair<int, int>> movimientos;
+vector<pair<int, int>> Tablero::obtenerMovimientosPosibles(int x, int y) {
+    vector<pair<int, int>> movimientos;
     Pieza* pieza = casillas[x][y];
     if (!pieza) return movimientos;
 
@@ -299,7 +301,7 @@ bool Tablero::hayJaque()
 }
 bool Tablero::hayMate_Ahogado()
 {
-    std::vector < std::pair<int, int>> movpieza;
+    vector <pair<int, int>> movpieza;
     int nummov = 0;
     Pieza* pieza;
     for (int i = 0; i < casillas.size(); ++i) {
@@ -316,20 +318,30 @@ bool Tablero::hayMate_Ahogado()
     {
         if (hayJaque())
         {
-            std::string ganador = (turno == BLANCO) ? "Negras" : "Blancas";
-            std::string mensaje = "Jaque Mate! Ganador: " + ganador;
+            string ganador = (turno == BLANCO) ? "Negras" : "Blancas";
+            string mensaje = "Jaque Mate! Ganador: " + ganador;
             MessageBoxA(nullptr, mensaje.c_str(), "Fin de Partida", MB_OK);
-            exit(0);
+            cout << "Jaque Mate, Ganan: " << ganador << endl;
+            return true;
         }
         else
         {
-            std::string ganador = (turno == NEGRO) ? "Negras" : "Blancas";
-            std::string mensaje = "Ahogado " + ganador + " ¡TABLAS!";
+            string ganador = (turno == NEGRO) ? "Negras" : "Blancas";
+            string mensaje = "Ahogado " + ganador + " ¡TABLAS!";
             MessageBoxA(nullptr, mensaje.c_str(), "Fin de Partida", MB_OK);
-            std::cout << "Ahogado " << ganador << std::endl << "TABLAS";
-            exit(0);
+            cout << "Ahogado " << ganador << endl << "TABLAS";
+            return true;
         }
     }
+    else if (noMatMate())
+    {
+        std::string ganador = (turno == NEGRO) ? "Negras" : "Blancas";
+        std::string mensaje = "No hay material suficiente: ¡TABLAS!";
+        MessageBoxA(nullptr, mensaje.c_str(), "Fin de Partida", MB_OK);
+        std::cout << "No hay material " << ganador << std::endl << "TABLAS";
+        return true;
+    }
+    return false;
 }
 void Tablero::resetearPassant(Color turno) {
     Pieza* posiblePeon;
@@ -397,6 +409,31 @@ void Tablero::Coronar(std::pair<int, int> pos, char opci)
             break;
         }
     }
+}
+bool Tablero::noMatMate()
+{
+    Pieza* pieza;
+    int matN = 0, matB = 0;
+    for (int i = 0; i < casillas.size(); ++i) {
+        for (int j = 0; j < casillas[0].size(); ++j) {
+            pieza = casillas[i][j];
+            if (dynamic_cast<Peon*>(casillas[i][j]) || dynamic_cast<Reina*>(casillas[i][j]) || dynamic_cast<Torre*>(casillas[i][j]))
+            {
+                return false;
+            }
+            if ((dynamic_cast<Caballo*>(casillas[i][j]) || dynamic_cast<Alfil*>(casillas[i][j])) && pieza->getColor() == BLANCO) {
+                matB++;
+            }
+            if ((dynamic_cast<Caballo*>(casillas[i][j]) || dynamic_cast<Alfil*>(casillas[i][j])) && pieza->getColor() == NEGRO) {
+                matN++;
+            }
+        }
+    }
+    if (matN > 1 || matB > 1)
+    {
+        return false;
+    }
+    return true;
 }
 int Tablero::getSeleccionadoX() const {
     return seleccionadoX;

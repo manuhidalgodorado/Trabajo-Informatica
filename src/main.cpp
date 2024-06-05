@@ -15,6 +15,7 @@ int mainWindow;
 std::pair<int, int> peonCorona;
 char a;
 bool coronacion;
+bool finPartida = false;
 
 void displayText(float x, float y, const char* text) {
     glRasterPos2f(x, y);
@@ -25,6 +26,11 @@ void displayText(float x, float y, const char* text) {
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
+    if (finPartida)
+    {
+        MessageBoxA(nullptr, "FIN DE LA PARTIDA", "ENDGAME", MB_OK);
+        exit(0);
+    }
     if (menuActivo) {
         // Dibujar pantalla de menú
         glColor3f(0.0f, 0.0f, 0.0f);
@@ -57,6 +63,7 @@ void display() {
     else if (tablero)
     {
         tablero->dibujar();
+        finPartida = tablero->hayMate_Ahogado();
     }
     glutSwapBuffers();
 }
