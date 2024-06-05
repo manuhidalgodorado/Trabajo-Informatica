@@ -368,6 +368,36 @@ std::pair<int, int> Tablero::peonCorona(bool& coronacion)
     coronacion = false;
     return{ -1,-1 };
 }
+void Tablero::Coronar(std::pair<int, int> pos, char opci)
+{
+    if (esModoDemi)
+    {
+        switch (opci)
+        {
+        case 't':
+            casillas[pos.first][pos.second] = new Torre(pos.first, pos.second, turno);
+            break;
+        case 'a':
+            casillas[pos.first][pos.second] = new Alfil(pos.first, pos.second, turno);
+            break;
+        case 'c':
+            casillas[pos.first][pos.second] = new Caballo(pos.first, pos.second, turno);
+            break;
+        }
+    }
+    else
+    {
+        switch (opci)
+        {
+        case 'r':
+            casillas[pos.first][pos.second] = new Reina(pos.first, pos.second, turno);
+            break;
+        case 't':
+            casillas[pos.first][pos.second] = new Torre(pos.first, pos.second, turno);
+            break;
+        }
+    }
+}
 int Tablero::getSeleccionadoX() const {
     return seleccionadoX;
 }

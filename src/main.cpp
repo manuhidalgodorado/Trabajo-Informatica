@@ -86,9 +86,22 @@ void inicializarJuego() {
         gluOrtho2D(0.0, 480.0, 0.0, tipoJuego == 1 ? 600.0 : 960.0);
         glutPostRedisplay();
     }
-    
 }
-
+void handleKeypress(unsigned char key, int x=0, int y=0)
+{
+    if (tablero && tablero->getSeleccionadoX() != -1 && tablero->getSeleccionadoY() != -1)
+    {
+        if (coronacion)
+        {
+            tablero->Coronar(peonCorona, key);
+            tablero->cambiarTurno();
+            tablero->setSeleccionadoX(-1);
+            tablero->setSeleccionadoY(-1);
+            coronacion = false;
+            glutPostRedisplay();
+        }
+    }
+}
 void onMouseClick(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         if (menuActivo) {
@@ -164,6 +177,7 @@ void onMouseClick(int button, int state, int x, int y) {
                         tablero->setSeleccionadoX(-1);
                         tablero->setSeleccionadoY(-1);
                     }
+                    handleKeypress(a);
                 }
                 else {
                     tablero->setSeleccionadoX(-1);

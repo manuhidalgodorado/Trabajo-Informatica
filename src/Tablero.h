@@ -30,6 +30,7 @@ public:
     bool hayJaque();
     bool hayMate_Ahogado();
     void resetearPassant(Color turno);
+    void Coronar(std::pair<int, int> pos, char opci);
 
 
 
