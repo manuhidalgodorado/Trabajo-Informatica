@@ -346,7 +346,7 @@ void Tablero::resetearPassant(Color turno) {
         }
     }
 }
-std::pair<int, int> Tablero::peonCorona()
+std::pair<int, int> Tablero::peonCorona(bool& coronacion)
 {
     Pieza* posiblePeon;
     Peon* confirmadoPeon;
@@ -359,10 +359,44 @@ std::pair<int, int> Tablero::peonCorona()
             delete casillas[LineaFinal][j];
             casillas[LineaFinal][j] = nullptr;
             MessageBoxA(nullptr, "Peon Corona", "Corona", MB_OK);
+            if (esModoDemi) MessageBoxA(nullptr, "Torre: t, Alfil: a, Caballo: c\n INTRODUCIR EN PANTALLA DE COMPILACION", "Corona", MB_OK);
+            else MessageBoxA(nullptr, "Torre: t, Reina: r\n INTRODUCIR EN PANTALLA DE COMPILACION", "Corona", MB_OK);
+            coronacion = true;
             return { LineaFinal, j };
         }
     }
+    coronacion = false;
     return{ -1,-1 };
+}
+void Tablero::Coronar(std::pair<int, int> pos, char opci)
+{
+    if (esModoDemi)
+    {
+        switch (opci)
+        {
+        case 't':
+            casillas[pos.first][pos.second] = new Torre(pos.first, pos.second, turno);
+            break;
+        case 'a':
+            casillas[pos.first][pos.second] = new Alfil(pos.first, pos.second, turno);
+            break;
+        case 'c':
+            casillas[pos.first][pos.second] = new Caballo(pos.first, pos.second, turno);
+            break;
+        }
+    }
+    else
+    {
+        switch (opci)
+        {
+        case 'r':
+            casillas[pos.first][pos.second] = new Reina(pos.first, pos.second, turno);
+            break;
+        case 't':
+            casillas[pos.first][pos.second] = new Torre(pos.first, pos.second, turno);
+            break;
+        }
+    }
 }
 int Tablero::getSeleccionadoX() const {
     return seleccionadoX;
