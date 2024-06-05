@@ -164,6 +164,7 @@ bool Tablero::compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal)
             if (casillas[xFinal][yFinal] != nullptr || casillas[xInicial + ((peon->getColor() == BLANCO) ? 1 : -1)][yFinal] != nullptr) {
                 return false;  // Casilla no está vacía
             }
+            peon->setEnPassant(true);
         }
         else if (std::abs(xFinal - xInicial) == 1 && std::abs(yFinal - yInicial) == 1) {
             // Captura en diagonal
@@ -177,6 +178,21 @@ bool Tablero::compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal)
         else {
             return false;  // Movimiento no válido para el peón
         }
+    }
+    if (dynamic_cast<Peon*>(pieza) && std::abs(xFinal - xInicial) == 1 && std::abs(yFinal - yInicial) == 1 && esModoDemi && casillas[xFinal][yFinal] == nullptr)
+    {
+        Pieza* piezaprov = casillas[xInicial][yFinal];
+        casillas[xInicial][yFinal] = nullptr;
+        casillas[xFinal][yFinal] = pieza;
+        casillas[xInicial][yInicial] = nullptr;
+        pieza->setPosicion(xFinal, yFinal);
+        bool hacke = hayJaque();
+        casillas[xInicial][yInicial] = pieza;
+        casillas[xFinal][yFinal] = nullptr;
+        casillas[xInicial][yFinal] = piezaprov;
+        pieza->setPosicion(xInicial, yInicial);
+        if (hacke)return false;
+        return true;
     }
     Pieza* piezaprov = casillas[xFinal][yFinal];
     casillas[xFinal][yFinal] = pieza;
@@ -195,11 +211,22 @@ bool Tablero::moverPieza(int xInicial, int yInicial, int xFinal, int yFinal) {
     Pieza* pieza = casillas[xInicial][yInicial];
     if (compMovePieza(xInicial, yInicial, xFinal, yFinal))
     {
-        delete casillas[xFinal][yFinal];  // Eliminar la pieza capturada
-        casillas[xFinal][yFinal] = pieza;
-        casillas[xInicial][yInicial] = nullptr;
-        pieza->setPosicion(xFinal, yFinal);
-        return true;
+        // Mover la pieza a la nueva posición y capturar cualquier pieza en la posición final
+        //Elimicacion en caso de captura en paso
+        if (dynamic_cast<Peon*>(pieza) && std::abs(xFinal - xInicial) == 1 && std::abs(yFinal - yInicial) == 1 && esModoDemi && casillas[xFinal][yFinal] == nullptr)
+        {
+            delete casillas[xInicial][yFinal];  // Eliminar la pieza capturada
+            casillas[xInicial][yFinal] = nullptr;
+            casillas[xFinal][yFinal] = pieza;
+            casillas[xInicial][yInicial] = nullptr;
+            pieza->setPosicion(xFinal, yFinal);
+        }
+        else {//Captura clasica
+            delete casillas[xFinal][yFinal];  // Eliminar la pieza capturada
+            casillas[xFinal][yFinal] = pieza;
+            casillas[xInicial][yInicial] = nullptr;
+            pieza->setPosicion(xFinal, yFinal);
+        }
     }
     else
     {
