@@ -17,6 +17,12 @@ char a;
 bool coronacion;
 bool finPartida = false;
 
+// Variables para controlar el tamaño de las pantallas
+const int anchoPantallaSilverman = 480;
+const int anchoPantallaDemi = 480;
+const int altoPantallaSilverman = 600;
+const int altoPantallaDemi = 700;
+
 void displayText(float x, float y, const char* text) {
     glRasterPos2f(x, y);
     for (const char* c = text; *c != '\0'; ++c) {
