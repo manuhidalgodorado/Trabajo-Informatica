@@ -28,6 +28,8 @@ public:
     vector<std::pair<int, int>> obtenerMovimientosPosibles(int x, int y);
     bool hayJaque();
     bool hayMate_Ahogado();
+    void resetearPassant(Color turno);
+
 
 
     int getSeleccionadoX() const;

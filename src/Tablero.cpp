@@ -132,7 +132,7 @@ bool Tablero::esCapturaAlPaso(int xInicial, int yInicial, int xFinal, int yFinal
 
 void Tablero::cambiarTurno() {
     turno = (turno == BLANCO) ? NEGRO : BLANCO;
-    hayMate_Ahogado();
+    resetearPassant(turno);
 }
 bool Tablero::compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal)
 {
@@ -301,6 +301,21 @@ bool Tablero::hayMate_Ahogado()
             MessageBoxA(nullptr, mensaje.c_str(), "Fin de Partida", MB_OK);
             std::cout << "Ahogado " << ganador << std::endl << "TABLAS";
             exit(0);
+        }
+    }
+}
+void Tablero::resetearPassant(Color turno) {
+    Pieza* posiblePeon;
+    Peon* confirmadoPeon;
+    for (int i = 0; i < casillas.size(); ++i) {
+        for (int j = 0; j < casillas[0].size(); ++j) {
+            posiblePeon = casillas[i][j];
+            if (dynamic_cast<Peon*>(posiblePeon) && posiblePeon->getColor() == turno)
+            {
+                confirmadoPeon = dynamic_cast<Peon*>(posiblePeon);
+                confirmadoPeon->setEnPassant(false);
+            }
+
         }
     }
 }
