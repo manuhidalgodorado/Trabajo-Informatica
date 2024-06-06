@@ -36,42 +36,6 @@ void displayText(float x, float y, const char* text) {
     }
 }
 
-void jugar_contra_ordenador()
-{
-    std::vector<std::pair<int, int>> piezas;
-
-    // Recopilar piezas negras
-    for (int i = 0; i < 8; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            Pieza* pieza = tablero->obtenerPieza(i, j);
-            if (pieza && pieza->getColor() == NEGRO) {
-                piezas.emplace_back(i, j);
-            }
-        }
-    }
-
-    // Generador de números aleatorios
-    std::random_device rd;
-    std::mt19937 g(rd());
-
-    // Mezclar piezas
-    std::shuffle(piezas.begin(), piezas.end(), g);
-
-    // Intentar mover una pieza
-    for (const auto& [x, y] : piezas) {
-        auto movimientos = tablero->obtenerMovimientosPosibles(x, y);
-        if (!movimientos.empty()) {
-            std::shuffle(movimientos.begin(), movimientos.end(), g);
-            auto [nuevoX, nuevoY] = movimientos.front();
-            tablero->moverPieza(x, y, nuevoX, nuevoY);
-            tablero->cambiarTurno();
-            break;
-        }
-    }
-
-    glutPostRedisplay();
-}
-
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_BLEND);
@@ -288,6 +252,42 @@ void onMouseClick(int button, int state, int x, int y) {
             glutPostRedisplay();
         }    
     }
+}
+
+void jugar_contra_ordenador()
+{
+    std::vector<std::pair<int, int>> piezas;
+
+    // Recopilar piezas negras
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            Pieza* pieza = tablero->obtenerPieza(i, j);
+            if (pieza && pieza->getColor() == NEGRO) {
+                piezas.emplace_back(i, j);
+            }
+        }
+    }
+
+    // Generador de números aleatorios
+    std::random_device rd;
+    std::mt19937 g(rd());
+
+    // Mezclar piezas
+    std::shuffle(piezas.begin(), piezas.end(), g);
+
+    // Intentar mover una pieza
+    for (const auto& [x, y] : piezas) {
+        auto movimientos = tablero->obtenerMovimientosPosibles(x, y);
+        if (!movimientos.empty()) {
+            std::shuffle(movimientos.begin(), movimientos.end(), g);
+            auto [nuevoX, nuevoY] = movimientos.front();
+            tablero->moverPieza(x, y, nuevoX, nuevoY);
+            tablero->cambiarTurno();
+            break;
+        }
+    }
+
+    glutPostRedisplay();
 }
 
 
