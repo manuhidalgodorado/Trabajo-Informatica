@@ -1,7 +1,10 @@
 #include "Caballo.h"
 #include <cmath>
 using namespace std;
-Caballo::Caballo(int _x, int _y, Color _color) : Pieza(_x, _y, _color) {}
+Caballo::Caballo(int _x, int _y, Color _color) : Pieza(_x, _y, _color) {
+     dirImg = (_color == BLANCO) ? "imagenes/CaballoBlanco.png" : "imagenes/CaballoNegro.png";
+
+}
 
 bool Caballo::esMovimientoValido(int nuevoX, int nuevoY) {
     // El caballo se mueve en forma de L: dos casillas en una dirección y una casilla en la otra

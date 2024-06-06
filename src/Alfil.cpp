@@ -2,7 +2,9 @@
 #include <cmath>
 using namespace std;
 
-Alfil::Alfil(int _x, int _y, Color _color) : Pieza(_x, _y, _color) {}
+Alfil::Alfil(int _x, int _y, Color _color) : Pieza(_x, _y, _color) {
+     dirImg = (_color == BLANCO) ? "imagenes/AlfilBlanco.png" : "imagenes/AlfilNegro.png";
+}
 
 bool Alfil::esMovimientoValido(int nuevoX, int nuevoY) {
     // El alfil se mueve en diagonal
