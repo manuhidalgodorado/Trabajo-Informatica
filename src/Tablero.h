@@ -16,7 +16,7 @@ public:
     Tablero(bool _esModoDemi);
     virtual ~Tablero();
 
-    void dibujar();
+    void dibujar(int anchoPantalla, int altoPantalla);
     Pieza* obtenerPieza(int x, int y);
     void seleccionarPieza(int x, int y);
     bool caminoDespejado(int xInicial, int yInicial, int xFinal, int yFinal);

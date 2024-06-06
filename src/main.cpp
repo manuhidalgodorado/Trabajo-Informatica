@@ -17,6 +17,12 @@ char a;
 bool coronacion;
 bool finPartida = false;
 
+// Variables para controlar el tamaño de las pantallas
+const int anchoPantallaSilverman = 480;
+const int anchoPantallaDemi = 480;
+const int altoPantallaSilverman = 600;
+const int altoPantallaDemi = 700;
+
 void displayText(float x, float y, const char* text) {
     glRasterPos2f(x, y);
     for (const char* c = text; *c != '\0'; ++c) {
@@ -62,7 +68,7 @@ void display() {
     }
     else if (tablero)
     {
-        tablero->dibujar();
+        tablero->dibujar((tipoJuego == 1) ? anchoPantallaSilverman : anchoPantallaDemi, (tipoJuego == 1) ? altoPantallaSilverman : altoPantallaDemi);
         finPartida = tablero->hayMate_Ahogado();
     }
     glutSwapBuffers();
@@ -70,27 +76,27 @@ void display() {
 
 void inicializarJuego() {
     if (tipoJuego == 1) {
-        glutInitWindowSize(480, 600);
+        glutInitWindowSize(anchoPantallaSilverman, altoPantallaSilverman);
         int newWindow = glutCreateWindow("Silverman 4x5");
         tablero = new TableroSilverman(false);  // Modo no Demi
         glutDestroyWindow(mainWindow);
         glutSetWindow(newWindow);
     }
     else if (tipoJuego == 2) {
-        glutInitWindowSize(480, 960);
+        glutInitWindowSize(anchoPantallaDemi, altoPantallaDemi);
         int newWindow = glutCreateWindow("Demi");
         tablero = new TableroDemi(true);  // Modo Demi
         glutDestroyWindow(mainWindow);
         glutSetWindow(newWindow);
     }
-    
+
     if (tablero) {
         glutDisplayFunc(display);
         glutMouseFunc(onMouseClick);
         glClearColor(1.0, 1.0, 1.0, 1.0);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluOrtho2D(0.0, 480.0, 0.0, tipoJuego == 1 ? 600.0 : 960.0);
+        gluOrtho2D(0.0, tipoJuego == 1 ? anchoPantallaSilverman : anchoPantallaDemi, 0.0, tipoJuego == 1 ? altoPantallaSilverman : altoPantallaDemi);
         glutPostRedisplay();
     }
 }
@@ -108,6 +114,15 @@ void handleKeypress(unsigned char key, int x=0, int y=0)
             glutPostRedisplay();
         }
     }
+}
+int calcularTableroY(int y, int altoPantallaSilverman, int altoPantallaDemi, int tipoJuego, int filas) {
+    // Determinar el tamaño de las casillas según el tipo de juego
+    float altoCasilla = tipoJuego == 1 ? static_cast<float>(altoPantallaSilverman) / filas : static_cast<float>(altoPantallaDemi) / filas;
+
+    // Calcular la coordenada Y de la casilla
+    int tableroY = static_cast<int>((tipoJuego == 1 ? altoPantallaSilverman : altoPantallaDemi) - y) / altoCasilla;
+
+    return tableroY;
 }
 void onMouseClick(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
@@ -129,8 +144,8 @@ void onMouseClick(int button, int state, int x, int y) {
             }
         }
         else if (tablero) {
-            int tableroX = x / 120;
-            int tableroY = ((tipoJuego == 1 ? 610 : 865) - y) / 110;
+            int tableroX = 4 * x / ((tipoJuego == 1) ? anchoPantallaSilverman : anchoPantallaDemi);
+            int tableroY = calcularTableroY(y, altoPantallaSilverman, altoPantallaDemi, tipoJuego, (tipoJuego == 1) ? 5 : 8);
 
             if (tableroX < 0 || tableroX >= 4 || tableroY < 0 || (tipoJuego == 1 ? tableroY >= 5 : tableroY >= 8)) return;
 
