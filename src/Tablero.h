@@ -32,7 +32,7 @@ public:
     void resetearPassant(Color turno);
     void Coronar(std::pair<int, int> pos, char opci);
     bool noMatMate();
-
+    Color getTurno() const;
 
 
     int getSeleccionadoX() const;
