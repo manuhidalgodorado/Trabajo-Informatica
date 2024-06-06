@@ -68,7 +68,7 @@ void display() {
     }
     else if (tablero)
     {
-        tablero->dibujar();
+        tablero->dibujar((tipoJuego == 1) ? anchoPantallaSilverman : anchoPantallaDemi, (tipoJuego == 1) ? altoPantallaSilverman : altoPantallaDemi);
         finPartida = tablero->hayMate_Ahogado();
     }
     glutSwapBuffers();
@@ -76,27 +76,27 @@ void display() {
 
 void inicializarJuego() {
     if (tipoJuego == 1) {
-        glutInitWindowSize(480, 600);
+        glutInitWindowSize(anchoPantallaSilverman, altoPantallaSilverman);
         int newWindow = glutCreateWindow("Silverman 4x5");
         tablero = new TableroSilverman(false);  // Modo no Demi
         glutDestroyWindow(mainWindow);
         glutSetWindow(newWindow);
     }
     else if (tipoJuego == 2) {
-        glutInitWindowSize(480, 960);
+        glutInitWindowSize(anchoPantallaDemi, altoPantallaDemi);
         int newWindow = glutCreateWindow("Demi");
         tablero = new TableroDemi(true);  // Modo Demi
         glutDestroyWindow(mainWindow);
         glutSetWindow(newWindow);
     }
-    
+
     if (tablero) {
         glutDisplayFunc(display);
         glutMouseFunc(onMouseClick);
         glClearColor(1.0, 1.0, 1.0, 1.0);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluOrtho2D(0.0, 480.0, 0.0, tipoJuego == 1 ? 600.0 : 960.0);
+        gluOrtho2D(0.0, tipoJuego == 1 ? anchoPantallaSilverman : anchoPantallaDemi, 0.0, tipoJuego == 1 ? altoPantallaSilverman : altoPantallaDemi);
         glutPostRedisplay();
     }
 }

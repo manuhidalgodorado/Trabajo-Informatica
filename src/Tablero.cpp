@@ -21,20 +21,26 @@ Tablero::~Tablero() {
     }
 }
 
-void Tablero::dibujar() {
+void Tablero::dibujar(int anchoPantalla, int altoPantalla) {
     // Dibujar tablero
     int filas = casillas.size();
     int columnas = casillas[0].size();
+
+    // Determinar el tamaño de las casillas según el tipo de juego
+    float anchoCasilla = static_cast<float>(anchoPantalla) / columnas;
+    float altoCasilla = static_cast<float> (altoPantalla) / filas;
+
+    // Dibujar tablero
     glColor3f(0.8f, 0.8f, 0.8f);
     for (int i = 0; i < filas; ++i) {
         for (int j = 0; j < columnas; ++j) {
             if ((i + j) % 2 == 0) glColor3f(0.9f, 0.9f, 0.9f);
             else glColor3f(0.3f, 0.3f, 0.3f);
             glBegin(GL_QUADS);
-            glVertex2f(j * 120, i * 120);
-            glVertex2f((j + 1) * 120, i * 120);
-            glVertex2f((j + 1) * 120, (i + 1) * 120);
-            glVertex2f(j * 120, (i + 1) * 120);
+            glVertex2f(j * anchoCasilla, i * altoCasilla);
+            glVertex2f((j + 1) * anchoCasilla, i * altoCasilla);
+            glVertex2f((j + 1) * anchoCasilla, (i + 1) * altoCasilla);
+            glVertex2f(j * anchoCasilla, (i + 1) * altoCasilla);
             glEnd();
         }
     }
