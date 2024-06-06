@@ -49,12 +49,12 @@ void Tablero::dibujar(int anchoPantalla, int altoPantalla) {
     for (int i = 0; i < filas; ++i) {
         for (int j = 0; j < columnas; ++j) {
             if (casillas[i][j] != nullptr) {
-                string nombrePieza = casillas[i][j]->obtenerNombre();
+                std::string nombrePieza = casillas[i][j]->obtenerNombre();
                 Color colorPieza = casillas[i][j]->getColor();
                 if (colorPieza == BLANCO) glColor3f(1.0f, 1.0f, 1.0f);
                 else glColor3f(0.0f, 0.0f, 0.0f);
                 // Dibujar la pieza como un texto en la casilla
-                glRasterPos2f(j * 120 + 50, i * 120 + 50);
+                glRasterPos2f(j * anchoCasilla + anchoCasilla / 2 - 10, i * altoCasilla + altoCasilla / 2 - 10);
                 for (char c : nombrePieza) {
                     glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
                 }
@@ -66,23 +66,23 @@ void Tablero::dibujar(int anchoPantalla, int altoPantalla) {
     if (seleccionadoX != -1 && seleccionadoY != -1) {
         glColor3f(1.0f, 0.0f, 0.0f);
         glBegin(GL_LINE_LOOP);
-        glVertex2f(seleccionadoY * 120, seleccionadoX * 120);
-        glVertex2f((seleccionadoY + 1) * 120, seleccionadoX * 120);
-        glVertex2f((seleccionadoY + 1) * 120, (seleccionadoX + 1) * 120);
-        glVertex2f(seleccionadoY * 120, (seleccionadoX + 1) * 120);
+        glVertex2f(seleccionadoY * anchoCasilla, seleccionadoX * altoCasilla);
+        glVertex2f((seleccionadoY + 1) * anchoCasilla, seleccionadoX * altoCasilla);
+        glVertex2f((seleccionadoY + 1) * anchoCasilla, (seleccionadoX + 1) * altoCasilla);
+        glVertex2f(seleccionadoY * anchoCasilla, (seleccionadoX + 1) * altoCasilla);
         glEnd();
     }
 
     // Dibujar movimientos posibles
     if (seleccionadoX != -1 && seleccionadoY != -1) {
         glColor3f(0.0f, 1.0f, 0.0f);  // Color verde para movimientos posibles
-        vector<pair<int, int>> movimientos = obtenerMovimientosPosibles(seleccionadoX, seleccionadoY);
+        std::vector<std::pair<int, int>> movimientos = obtenerMovimientosPosibles(seleccionadoX, seleccionadoY);
         for (const auto& mov : movimientos) {
             glBegin(GL_LINE_LOOP);
-            glVertex2f(mov.second * 120, mov.first * 120);
-            glVertex2f((mov.second + 1) * 120, mov.first * 120);
-            glVertex2f((mov.second + 1) * 120, (mov.first + 1) * 120);
-            glVertex2f(mov.second * 120, (mov.first + 1) * 120);
+            glVertex2f(mov.second * anchoCasilla, mov.first * altoCasilla);
+            glVertex2f((mov.second + 1) * anchoCasilla, mov.first * altoCasilla);
+            glVertex2f((mov.second + 1) * anchoCasilla, (mov.first + 1) * altoCasilla);
+            glVertex2f(mov.second * anchoCasilla, (mov.first + 1) * altoCasilla);
             glEnd();
         }
     }
@@ -325,9 +325,9 @@ bool Tablero::hayMate_Ahogado()
         if (hayJaque())
         {
             string ganador = (turno == BLANCO) ? "Negras" : "Blancas";
-            string mensaje = "Jaque Mate! Ganador: " + ganador;
+            string mensaje = "Jaque Mate! Ganador " + ganador;
             MessageBoxA(nullptr, mensaje.c_str(), "Fin de Partida", MB_OK);
-            cout << "Jaque Mate, Ganan: " << ganador << endl;
+            cout << "Jaque Mate, Ganan " << ganador << endl;
             return true;
         }
         else
@@ -342,7 +342,7 @@ bool Tablero::hayMate_Ahogado()
     else if (noMatMate())
     {
         std::string ganador = (turno == NEGRO) ? "Negras" : "Blancas";
-        std::string mensaje = "No hay material suficiente: ¡TABLAS!";
+        std::string mensaje = "No hay material suficiente ¡TABLAS!";
         MessageBoxA(nullptr, mensaje.c_str(), "Fin de Partida", MB_OK);
         std::cout << "No hay material " << ganador << std::endl << "TABLAS";
         return true;

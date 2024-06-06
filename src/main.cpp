@@ -115,6 +115,15 @@ void handleKeypress(unsigned char key, int x=0, int y=0)
         }
     }
 }
+int calcularTableroY(int y, int altoPantallaSilverman, int altoPantallaDemi, int tipoJuego, int filas) {
+    // Determinar el tamaño de las casillas según el tipo de juego
+    float altoCasilla = tipoJuego == 1 ? static_cast<float>(altoPantallaSilverman) / filas : static_cast<float>(altoPantallaDemi) / filas;
+
+    // Calcular la coordenada Y de la casilla
+    int tableroY = static_cast<int>((tipoJuego == 1 ? altoPantallaSilverman : altoPantallaDemi) - y) / altoCasilla;
+
+    return tableroY;
+}
 void onMouseClick(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         if (menuActivo) {
@@ -135,8 +144,8 @@ void onMouseClick(int button, int state, int x, int y) {
             }
         }
         else if (tablero) {
-            int tableroX = x / 120;
-            int tableroY = ((tipoJuego == 1 ? 610 : 865) - y) / 110;
+            int tableroX = 4 * x / ((tipoJuego == 1) ? anchoPantallaSilverman : anchoPantallaDemi);
+            int tableroY = calcularTableroY(y, altoPantallaSilverman, altoPantallaDemi, tipoJuego, (tipoJuego == 1) ? 5 : 8);
 
             if (tableroX < 0 || tableroX >= 4 || tableroY < 0 || (tipoJuego == 1 ? tableroY >= 5 : tableroY >= 8)) return;
 
