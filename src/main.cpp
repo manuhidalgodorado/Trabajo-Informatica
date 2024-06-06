@@ -2,6 +2,9 @@
 #include <freeglut.h>
 #include "TableroSilverman.h"
 #include "TableroDemi.h"
+#include <algorithm>
+#include <random>
+
 
 // Declaraciones de funciones
 void display();
@@ -9,10 +12,12 @@ void onMouseClick(int button, int state, int x, int y);
 void handleKeypress(unsigned char, int, int);
 void inicializarJuego();
 void displayText(float x, float y, const char* text);
+void jugar_contra_ordenador();
 
 Tablero* tablero = nullptr;
 int tipoJuego = 0;
 bool menuActivo = true;
+bool ordenador = false;
 int mainWindow;
 std::pair<int, int> peonCorona;
 bool coronacion;
@@ -29,6 +34,42 @@ void displayText(float x, float y, const char* text) {
     for (const char* c = text; *c != '\0'; ++c) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *c);
     }
+}
+
+void jugar_contra_ordenador()
+{
+    std::vector<std::pair<int, int>> piezas;
+
+    // Recopilar piezas negras
+    for (int i = 0; i < 8; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            Pieza* pieza = tablero->obtenerPieza(i, j);
+            if (pieza && pieza->getColor() == NEGRO) {
+                piezas.emplace_back(i, j);
+            }
+        }
+    }
+
+    // Generador de números aleatorios
+    std::random_device rd;
+    std::mt19937 g(rd());
+
+    // Mezclar piezas
+    std::shuffle(piezas.begin(), piezas.end(), g);
+
+    // Intentar mover una pieza
+    for (const auto& [x, y] : piezas) {
+        auto movimientos = tablero->obtenerMovimientosPosibles(x, y);
+        if (!movimientos.empty()) {
+            std::shuffle(movimientos.begin(), movimientos.end(), g);
+            auto [nuevoX, nuevoY] = movimientos.front();
+            tablero->moverPieza(x, y, nuevoX, nuevoY);
+            tablero->cambiarTurno();
+            break;
+        }
+    }
+
+    glutPostRedisplay();
 }
 
 void display() {
@@ -64,10 +105,23 @@ void display() {
 
         glColor3f(0.0f, 0.0f, 0.0f);
         displayText(190, 220, "      Demi");
+   
+        // Dibujar botón Demi contra ordenador
+        glColor3f(0.6f, 0.6f, 0.6f);
+        glBegin(GL_QUADS);
+        glVertex2f(150, 100);
+        glVertex2f(330, 100);
+        glVertex2f(330, 150);
+        glVertex2f(150, 150);
+        glEnd();
+
+        glColor3f(0.0f, 0.0f, 0.0f);
+        displayText(162, 120, "Demi vs Ordenador");
+
     }
     else if (tablero) {
-        tablero->dibujar((tipoJuego == 1) ? anchoPantallaSilverman : anchoPantallaDemi, (tipoJuego == 1) ? altoPantallaSilverman : altoPantallaDemi);
-        finPartida = tablero->hayMate_Ahogado();
+        tablero->dibujar((tipoJuego==1)?anchoPantallaSilverman:anchoPantallaDemi, (tipoJuego == 1) ? altoPantallaSilverman : altoPantallaDemi);
+        finPartida=tablero->hayMate_Ahogado();
     }
     glutSwapBuffers();
 }
@@ -80,10 +134,10 @@ void inicializarJuego() {
         glutDestroyWindow(mainWindow);
         glutSetWindow(newWindow);
     }
-    else if (tipoJuego == 2) {
+    else if (tipoJuego == 2 || tipoJuego == 3) {
         glutInitWindowSize(anchoPantallaDemi, altoPantallaDemi);
         int newWindow = glutCreateWindow("Demi");
-        tablero = new TableroDemi(true);  // Modo Demi
+        tablero = new TableroDemi(true);
         glutDestroyWindow(mainWindow);
         glutSetWindow(newWindow);
     }
@@ -97,6 +151,11 @@ void inicializarJuego() {
         glLoadIdentity();
         gluOrtho2D(0.0, tipoJuego == 1 ? anchoPantallaSilverman : anchoPantallaDemi, 0.0, tipoJuego == 1 ? altoPantallaSilverman : altoPantallaDemi);
         glutPostRedisplay();
+
+        // Si el ordenador tiene turno, realiza su primer movimiento
+        if (tipoJuego == 3 && tablero->getTurno() == NEGRO) {
+            jugar_contra_ordenador();
+        }
     }
 }
 
@@ -112,6 +171,11 @@ void handleKeypress(unsigned char key, int x, int y)
             tablero->setSeleccionadoY(-1);
             coronacion = false;
             glutPostRedisplay();
+
+            // Si el ordenador tiene turno, realiza su movimiento despues de la coronación
+            if (tipoJuego == 3 && tablero->getTurno() == NEGRO) {
+                jugar_contra_ordenador();
+            }
         }
     }
 
@@ -144,9 +208,17 @@ void onMouseClick(int button, int state, int x, int y) {
                 menuActivo = false;
                 inicializarJuego();
             }
+            // Verificar si se hizo clic en el botón Demi vs Ordenador
+            else if (x >= 150 && x <= 330 && glY >= 100 && glY <= 150) {
+                tipoJuego = 3;
+                menuActivo = false;
+                ordenador = true;
+                inicializarJuego();
+            }
         }
         else if (tablero) {
-            int tableroX = 4 * x / ((tipoJuego == 1) ? anchoPantallaSilverman : anchoPantallaDemi);
+            if (ordenador && tablero->getTurno() == NEGRO) return; // Nos aseguramos de que el jugador no mueve pieza mientras que el turno es del ordenador
+            int tableroX = 4*x / ((tipoJuego==1)?anchoPantallaSilverman:anchoPantallaDemi);
             int tableroY = calcularTableroY(y, altoPantallaSilverman, altoPantallaDemi, tipoJuego, (tipoJuego == 1) ? 5 : 8);
 
             if (tableroX < 0 || tableroX >= 4 || tableroY < 0 || (tipoJuego == 1 ? tableroY >= 5 : tableroY >= 8)) return;
@@ -163,7 +235,7 @@ void onMouseClick(int button, int state, int x, int y) {
                     peonCorona = tablero->peonCorona(coronacion);
                     if (coronacion)
                     {
-                        if (tipoJuego == 2)
+                        if (tipoJuego == 2 || tipoJuego == 3)
                         {
                             while (a != 'c' && a != 'a' && a != 't')
                             {
@@ -200,6 +272,11 @@ void onMouseClick(int button, int state, int x, int y) {
                         tablero->cambiarTurno();
                         tablero->setSeleccionadoX(-1);
                         tablero->setSeleccionadoY(-1);
+
+                        // Si el ordenador tiene turno, realiza su movimiento después del jugador
+                        if (ordenador && tablero->getTurno() == NEGRO) {
+                            jugar_contra_ordenador();
+                        }
                     }
                     handleKeypress(a, 0, 0);
                 }
@@ -209,7 +286,7 @@ void onMouseClick(int button, int state, int x, int y) {
                 }
             }
             glutPostRedisplay();
-        }
+        }    
     }
 }
 
@@ -230,3 +307,4 @@ int main(int argc, char** argv) {
     delete tablero;
     return 0;
 }
+
