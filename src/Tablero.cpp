@@ -435,6 +435,9 @@ bool Tablero::noMatMate()
     }
     return true;
 }
+Color Tablero::getTurno() const {
+    return turno;
+}
 int Tablero::getSeleccionadoX() const {
     return seleccionadoX;
 }
