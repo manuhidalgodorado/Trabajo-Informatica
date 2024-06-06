@@ -85,5 +85,8 @@
     <Library Include="lib\freeglut.lib">
       <Filter>Archivos de encabezado</Filter>
     </Library>
+    <Library Include="lib\ETSIDI.lib">
+      <Filter>Archivos de encabezado</Filter>
+    </Library>
   </ItemGroup>
 </Project>

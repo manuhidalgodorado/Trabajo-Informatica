@@ -44,6 +44,7 @@
     <ClInclude Include="src\Torre.h" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="lib\ETSIDI.lib" />
     <Library Include="lib\freeglut.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
