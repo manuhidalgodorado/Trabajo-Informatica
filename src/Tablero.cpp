@@ -10,9 +10,10 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
-using namespace std;
+
 
 Tablero::Tablero(bool _esModoDemi) : turno(BLANCO), seleccionadoX(-1), seleccionadoY(-1), esModoDemi(_esModoDemi) {}
+
 Tablero::~Tablero() {
     for (auto& fila : casillas) {
         for (auto& pieza : fila) {
@@ -49,18 +50,11 @@ void Tablero::dibujar(int anchoPantalla, int altoPantalla) {
     for (int i = 0; i < filas; ++i) {
         for (int j = 0; j < columnas; ++j) {
             if (casillas[i][j] != nullptr) {
-                std::string nombrePieza = casillas[i][j]->obtenerNombre();
-                Color colorPieza = casillas[i][j]->getColor();
-                if (colorPieza == BLANCO) glColor3f(1.0f, 1.0f, 1.0f);
-                else glColor3f(0.0f, 0.0f, 0.0f);
-                // Dibujar la pieza como un texto en la casilla
-                glRasterPos2f(j * anchoCasilla + anchoCasilla / 2 - 10, i * altoCasilla + altoCasilla / 2 - 10);
-                for (char c : nombrePieza) {
-                    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
-                }
+                casillas[i][j]->dibujarPieza(anchoCasilla, altoCasilla);
             }
         }
     }
+
 
     // Dibujar selección
     if (seleccionadoX != -1 && seleccionadoY != -1) {

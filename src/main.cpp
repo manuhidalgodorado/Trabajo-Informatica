@@ -1,21 +1,22 @@
 #include <iostream>
-#include "freeglut.h"
+#include <freeglut.h>
 #include "TableroSilverman.h"
 #include "TableroDemi.h"
 
+// Declaraciones de funciones
 void display();
+void onMouseClick(int button, int state, int x, int y);
+void handleKeypress(unsigned char, int, int);
 void inicializarJuego();
 void displayText(float x, float y, const char* text);
-void onMouseClick(int button, int state, int x, int y);
 
+Tablero* tablero = nullptr;
 int tipoJuego = 0;
 bool menuActivo = true;
-Tablero* tablero = nullptr;
 int mainWindow;
 std::pair<int, int> peonCorona;
-char a;
 bool coronacion;
-bool finPartida = false;
+bool finPartida;
 
 // Variables para controlar el tamaño de las pantallas
 const int anchoPantallaSilverman = 480;
@@ -32,11 +33,9 @@ void displayText(float x, float y, const char* text) {
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
-    if (finPartida)
-    {
-        MessageBoxA(nullptr, "FIN DE LA PARTIDA", "ENDGAME", MB_OK);
-        exit(0);
-    }
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    if (finPartida)exit(0);
     if (menuActivo) {
         // Dibujar pantalla de menú
         glColor3f(0.0f, 0.0f, 0.0f);
@@ -66,8 +65,7 @@ void display() {
         glColor3f(0.0f, 0.0f, 0.0f);
         displayText(190, 220, "      Demi");
     }
-    else if (tablero)
-    {
+    else if (tablero) {
         tablero->dibujar((tipoJuego == 1) ? anchoPantallaSilverman : anchoPantallaDemi, (tipoJuego == 1) ? altoPantallaSilverman : altoPantallaDemi);
         finPartida = tablero->hayMate_Ahogado();
     }
@@ -92,6 +90,7 @@ void inicializarJuego() {
 
     if (tablero) {
         glutDisplayFunc(display);
+        glutKeyboardFunc(handleKeypress);
         glutMouseFunc(onMouseClick);
         glClearColor(1.0, 1.0, 1.0, 1.0);
         glMatrixMode(GL_PROJECTION);
@@ -100,7 +99,8 @@ void inicializarJuego() {
         glutPostRedisplay();
     }
 }
-void handleKeypress(unsigned char key, int x=0, int y=0)
+
+void handleKeypress(unsigned char key, int x, int y)
 {
     if (tablero && tablero->getSeleccionadoX() != -1 && tablero->getSeleccionadoY() != -1)
     {
@@ -114,6 +114,7 @@ void handleKeypress(unsigned char key, int x=0, int y=0)
             glutPostRedisplay();
         }
     }
+
 }
 int calcularTableroY(int y, int altoPantallaSilverman, int altoPantallaDemi, int tipoJuego, int filas) {
     // Determinar el tamaño de las casillas según el tipo de juego
@@ -125,10 +126,11 @@ int calcularTableroY(int y, int altoPantallaSilverman, int altoPantallaDemi, int
     return tableroY;
 }
 void onMouseClick(int button, int state, int x, int y) {
+    char a = 0;
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         if (menuActivo) {
             // Convertir coordenadas de pantalla a coordenadas de OpenGL
-            int glY = 600 - y;
+            int glY = altoPantallaSilverman - y;
 
             // Verificar si se hizo clic en el botón Silverman 4x5
             if (x >= 150 && x <= 330 && glY >= 300 && glY <= 350) {
@@ -199,7 +201,7 @@ void onMouseClick(int button, int state, int x, int y) {
                         tablero->setSeleccionadoX(-1);
                         tablero->setSeleccionadoY(-1);
                     }
-                    handleKeypress(a);
+                    handleKeypress(a, 0, 0);
                 }
                 else {
                     tablero->setSeleccionadoX(-1);
@@ -215,14 +217,15 @@ void onMouseClick(int button, int state, int x, int y) {
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize(480, 600);
+    glutInitWindowSize(anchoPantallaSilverman, altoPantallaSilverman);
     mainWindow = glutCreateWindow("Ajedrez");
     glutDisplayFunc(display);
+    glutKeyboardFunc(handleKeypress);
     glutMouseFunc(onMouseClick);
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0.0, 480.0, 0.0, 600.0);
+    gluOrtho2D(0.0, anchoPantallaSilverman, 0.0, altoPantallaSilverman);
     glutMainLoop();
     delete tablero;
     return 0;

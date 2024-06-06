@@ -6,6 +6,7 @@ using namespace std;
 
 Peon::Peon(int _x, int _y, Color _color, bool _esModoDemi) : Pieza(_x, _y, _color), esModoDemi(_esModoDemi) {
     enPassant = false;
+    dirImg = (_color == BLANCO) ? "imagenes/PeonBlanco.png" : "imagenes/PeonNegro.png";
 }
 
 bool Peon::esMovimientoValido(int nuevoX, int nuevoY) {
