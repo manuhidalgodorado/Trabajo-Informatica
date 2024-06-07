@@ -10,6 +10,9 @@
 #include <Windows.h>
 #include <string>
 #include <vector>
+#define byte my_byte
+#include "ETSIDI.h"
+#undef my_byte
 
 
 Tablero::Tablero(bool _esModoDemi) : turno(BLANCO), seleccionadoX(-1), seleccionadoY(-1), esModoDemi(_esModoDemi) {}
@@ -230,6 +233,7 @@ bool Tablero::moverPieza(int xInicial, int yInicial, int xFinal, int yFinal) {
         }
         string jugador = (turno == BLANCO) ? "Blancas" : "Negras";
         cout << jugador << ": " << pieza->obtenerNombre() << (char)(pieza->getY() + 97) << pieza->getX() << endl;
+        ETSIDI::play(pieza->getSonido());
     }
     else
     {
@@ -320,7 +324,7 @@ bool Tablero::hayMate_Ahogado()
         if (hayJaque())
         {
             string ganador = (turno == BLANCO) ? "Negras" : "Blancas";
-            string mensaje = "Jaque Mate! Ganador " + ganador;
+            string mensaje = "Jaque Mate Ganador " + ganador;
             MessageBoxA(nullptr, mensaje.c_str(), "Fin de Partida", MB_OK);
             cout << "Jaque Mate, Ganan " << ganador << endl;
             return true;
@@ -328,7 +332,7 @@ bool Tablero::hayMate_Ahogado()
         else
         {
             string ganador = (turno == NEGRO) ? "Negras" : "Blancas";
-            string mensaje = "Ahogado " + ganador + " ¡TABLAS!";
+            string mensaje = "Ahogado " + ganador + " TABLAS";
             MessageBoxA(nullptr, mensaje.c_str(), "Fin de Partida", MB_OK);
             cout << "Ahogado " << ganador << endl << "TABLAS";
             return true;
@@ -337,7 +341,7 @@ bool Tablero::hayMate_Ahogado()
     else if (noMatMate())
     {
         std::string ganador = (turno == NEGRO) ? "Negras" : "Blancas";
-        std::string mensaje = "No hay material suficiente ¡TABLAS!";
+        std::string mensaje = "No hay material suficiente TABLAS";
         MessageBoxA(nullptr, mensaje.c_str(), "Fin de Partida", MB_OK);
         std::cout << "No hay material " << ganador << std::endl << "TABLAS";
         return true;

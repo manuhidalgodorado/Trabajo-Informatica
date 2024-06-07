@@ -24,6 +24,7 @@ public:
 
     int getX() const;
     int getY() const;
+    const char* getSonido() const;
     Color getColor() const;
     void setPosicion(int nuevoX, int nuevoY);
 };
