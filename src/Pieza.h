@@ -10,6 +10,7 @@ protected:
     int x, y;
     Color color;
     const char* dirImg;
+    const char* dirSon;
 
 public:
     Pieza(int _x, int _y, Color _color);

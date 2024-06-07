@@ -3,7 +3,7 @@
 using namespace std;
 Caballo::Caballo(int _x, int _y, Color _color) : Pieza(_x, _y, _color) {
      dirImg = (_color == BLANCO) ? "imagenes/CaballoBlanco.png" : "imagenes/CaballoNegro.png";
-
+     dirSon = (_color == BLANCO) ? "sonidos/CaballoBlanco.wav" : "sonidos/CaballoNegro.wav";
 }
 
 bool Caballo::esMovimientoValido(int nuevoX, int nuevoY) {

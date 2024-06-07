@@ -3,6 +3,7 @@
 using namespace std;
 Torre::Torre(int _x, int _y, Color _color) : Pieza(_x, _y, _color) { 
     dirImg = (_color == BLANCO) ? "imagenes/TorreBlanca.png" : "imagenes/TorreNegra.png";
+    dirSon = (_color == BLANCO) ? "sonidos/TorreBlanca.wav" : "sonidos/TorreNegra.wav";
 }
 
 bool Torre::esMovimientoValido(int nuevoX, int nuevoY) {
