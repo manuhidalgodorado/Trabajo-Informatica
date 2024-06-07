@@ -21,6 +21,7 @@ Pieza& Pieza::operator=(const Pieza* pieza)
 
 int Pieza::getX() const { return x; }
 int Pieza::getY() const { return y; }
+const char* Pieza::getSonido() const { return dirSon; };
 Color Pieza::getColor() const { return color; }
 
 void Pieza::setPosicion(int nuevoX, int nuevoY) {

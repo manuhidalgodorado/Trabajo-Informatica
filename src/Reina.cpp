@@ -4,6 +4,7 @@
 using namespace std;
 Reina::Reina(int _x, int _y, Color _color) : Pieza(_x, _y, _color) { 
     dirImg = (_color == BLANCO) ? "imagenes/ReinaBlanca.png" : "imagenes/ReinaNegra.png";
+    dirSon = (_color == BLANCO) ? "sonidos/ReinaBlanca.wav" : "sonidos/ReinaNegra.wav";
 }
 
 bool Reina::esMovimientoValido(int nuevoX, int nuevoY) {

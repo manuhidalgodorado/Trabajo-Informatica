@@ -4,6 +4,7 @@
 
     Rey::Rey(int _x, int _y, Color _color) : Pieza(_x, _y, _color) {
         dirImg = (_color == BLANCO) ? "imagenes/ReyBlanco.png" : "imagenes/ReyNegro.png";
+        dirSon = (_color == BLANCO) ? "sonidos/ReyBlanco.wav" : "sonidos/ReyNegro.wav";
     }
 
     bool Rey::esMovimientoValido(int nuevoX, int nuevoY) {
