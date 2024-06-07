@@ -132,6 +132,7 @@ bool Tablero::esCapturaAlPaso(int xInicial, int yInicial, int xFinal, int yFinal
 
 void Tablero::cambiarTurno() {
     turno = (turno == BLANCO) ? NEGRO : BLANCO;
+    hayMate_Ahogado();
     resetearPassant(turno);
 }
 bool Tablero::compMovePieza(int xInicial, int yInicial, int xFinal, int yFinal)

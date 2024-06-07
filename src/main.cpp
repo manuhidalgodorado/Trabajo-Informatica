@@ -40,7 +40,6 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    if (finPartida)exit(0);
     if (menuActivo) {
         // Dibujar pantalla de menú
         glColor3f(0.0f, 0.0f, 0.0f);
@@ -85,7 +84,6 @@ void display() {
     }
     else if (tablero) {
         tablero->dibujar((tipoJuego==1)?anchoPantallaSilverman:anchoPantallaDemi, (tipoJuego == 1) ? altoPantallaSilverman : altoPantallaDemi);
-        finPartida=tablero->hayMate_Ahogado();
     }
     glutSwapBuffers();
 }
@@ -282,11 +280,18 @@ void jugar_contra_ordenador()
             std::shuffle(movimientos.begin(), movimientos.end(), g);
             auto [nuevoX, nuevoY] = movimientos.front();
             tablero->moverPieza(x, y, nuevoX, nuevoY);
-            tablero->cambiarTurno();
+            
             break;
         }
     }
-
+    peonCorona = tablero->peonCorona(coronacion);
+    if (coronacion)
+    {
+        vector<char> opci = { 't', 'a', 'c' };
+        std::shuffle(opci.begin(), opci.end(), g);
+        tablero->Coronar(peonCorona, opci.front());
+    }
+    tablero->cambiarTurno();
     glutPostRedisplay();
 }
 
